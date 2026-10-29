@@ -7,3 +7,77 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.holy-grail {
+    display: grid;
+    min-height: 100vh;
+
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: auto 1fr auto;
+
+    grid-template-areas:
+        "header  header  header"
+        "nav     main    sidebar"
+        "footer  footer  footer";
+}
+
+.header {
+    grid-area: header;
+    background: #2563eb;
+    color: white;
+    padding: 20px;
+}
+
+.nav {
+    grid-area: nav;
+    background: #e5e7eb;
+    padding: 20px;
+}
+
+.main {
+    grid-area: main;
+    background: #f9fafb;
+    padding: 20px;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background: #e5e7eb;
+    padding: 20px;
+}
+
+.footer {
+    grid-area: footer;
+    background: #1f2937;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.nav a {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .holy-grail {
+        grid-template-columns: 1fr;
+
+        grid-template-rows: auto;
+
+        grid-template-areas:
+            "header"
+            "nav"
+            "main"
+            "sidebar"
+            "footer";
+    }
+}
