@@ -23,8 +23,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:0',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+            'expiration_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive,expired',
         ]);
 
         Product::create($validated);
@@ -47,8 +49,10 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:0',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+            'expiration_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive,expired',
         ]);
 
         $product->update($validated);
