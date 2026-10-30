@@ -4,6 +4,7 @@
     <p><strong>ID:</strong> {{ $product->id }}</p>
     <p><strong>Daudzums:</strong> {{ $product->quantity }}</p>
     <p><strong>Apraksts:</strong> {{ $product->description ?? 'Nav apraksta' }}</p>
+    <p><strong>Price:</strong> {{ $product->price }}</p>
 
     <p>
         <strong>Derīguma termiņš:</strong>

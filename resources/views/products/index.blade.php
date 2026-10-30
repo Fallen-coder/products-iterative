@@ -12,6 +12,7 @@
                 <th>Nosaukums</th>
                 <th>Daudzums</th>
                 <th>Apraksts</th>
+                <th>Price</th>
                 <th>Derīguma termiņš</th>
                 <th>Statuss</th>
                 <th>Darbības</th>
@@ -25,6 +26,7 @@
                     <td>{{ $product->name }}</td>
                     <td>{{ $product->quantity }}</td>
                     <td>{{ $product->description }}</td>
+                    <td>{{ $product->price }}</td>
                     <td>{{ $product->expiration_date?->format('d.m.Y') ?? '-' }}</td>
                     <td>{{ $product->status }}</td>
                     <td>
