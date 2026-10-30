@@ -45,6 +45,8 @@ class ProductFactory extends Factory
 
             'quantity' => fake()->numberBetween(1, 500),
 
+             'price' => fake()->randomFloat(2, 0.50, 100),
+        
             'description' => fake()->sentence(12),
 
             'expiration_date' => fake()->dateTimeBetween(
