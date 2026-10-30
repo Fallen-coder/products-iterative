@@ -5,16 +5,15 @@
         Pievienot produktu
     </a>
 
-    @if (session('success'))
-        <p>{{ session('success') }}</p>
-    @endif
-
     <table border="1" cellpadding="10">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Nosaukums</th>
-                <th>Cena</th>
+                <th>Daudzums</th>
+                <th>Apraksts</th>
+                <th>Derīguma termiņš</th>
+                <th>Statuss</th>
                 <th>Darbības</th>
             </tr>
         </thead>
@@ -24,7 +23,10 @@
                 <tr>
                     <td>{{ $product->id }}</td>
                     <td>{{ $product->name }}</td>
-                    <td>{{ number_format($product->price, 2) }} €</td>
+                    <td>{{ $product->quantity }}</td>
+                    <td>{{ $product->description }}</td>
+                    <td>{{ $product->expiration_date?->format('d.m.Y') ?? '-' }}</td>
+                    <td>{{ $product->status }}</td>
                     <td>
                         <a href="{{ route('products.show', $product) }}">
                             Apskatīt
@@ -37,18 +39,17 @@
                         <form action="{{ route('products.destroy', $product) }}"
                               method="POST"
                               style="display:inline">
+
                             @csrf
                             @method('DELETE')
 
-                            <button type="submit">
-                                Dzēst
-                            </button>
+                            <button type="submit">Dzēst</button>
                         </form>
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4">Produktu vēl nav.</td>
+                    <td colspan="7">Produktu vēl nav.</td>
                 </tr>
             @endforelse
         </tbody>

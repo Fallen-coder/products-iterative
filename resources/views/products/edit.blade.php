@@ -3,32 +3,50 @@
 
     <form action="{{ route('products.update', $product) }}"
           method="POST">
+
         @csrf
         @method('PUT')
 
         <label>Nosaukums:</label>
         <input type="text" name="name"
                value="{{ old('name', $product->name) }}">
-        @error('name')
-            <p>{{ $message }}</p>
-        @enderror
+
+        <br><br>
+
+        <label>Daudzums:</label>
+        <input type="number" name="quantity" min="0"
+               value="{{ old('quantity', $product->quantity) }}">
 
         <br><br>
 
         <label>Apraksts:</label>
         <textarea name="description">{{ old('description', $product->description) }}</textarea>
-        @error('description')
-            <p>{{ $message }}</p>
-        @enderror
 
         <br><br>
 
-        <label>Cena:</label>
-        <input type="number" name="price" step="0.01"
-               min="0" value="{{ old('price', $product->price) }}">
-        @error('price')
-            <p>{{ $message }}</p>
-        @enderror
+        <label>Derīguma termiņš:</label>
+        <input type="date" name="expiration_date"
+               value="{{ old('expiration_date', $product->expiration_date?->format('Y-m-d')) }}">
+
+        <br><br>
+
+        <label>Statuss:</label>
+        <select name="status">
+            <option value="active"
+                @selected(old('status', $product->status) == 'active')>
+                Aktīvs
+            </option>
+
+            <option value="inactive"
+                @selected(old('status', $product->status) == 'inactive')>
+                Neaktīvs
+            </option>
+
+            <option value="expired"
+                @selected(old('status', $product->status) == 'expired')>
+                Beidzies
+            </option>
+        </select>
 
         <br><br>
 
