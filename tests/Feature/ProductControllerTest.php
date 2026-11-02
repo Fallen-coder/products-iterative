@@ -86,4 +86,64 @@ class ProductControllerTest extends TestCase
 
         $response->assertNotFound();
     }
+
+    public function test_user_can_create_product(): void
+    {
+        $response = $this->post(route('products.store'), [
+            'name' => 'New Product',
+            'quantity' => 10,
+            'description' => 'New product description',
+            'price' => "15.50",
+            'expiration_date' => '2027-12-31',
+            'status' => 'active',
+        ]);
+
+        $response->assertRedirect(route('products.index'));
+
+        $this->assertDatabaseHas('products', [
+            'name' => 'New Product',
+            'quantity' => 10,
+            'price' => "15.50",
+        ]);
+    }
+
+    public function test_user_can_update_product(): void
+    {
+        $product = $this->createProduct(5);
+
+        $response = $this->put(
+            route('products.update', $product),
+            [
+                'name' => 'Updated Product',
+                'quantity' => 20,
+                'description' => 'Updated description',
+                'price' => '25.00',
+                'expiration_date' => '2027-12-31',
+                'status' => 'active',
+            ]
+        );
+
+        $response->assertRedirect(route('products.index'));
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'name' => 'Updated Product',
+            'quantity' => 20,
+            'price' =>'25.00',
+        ]);
+    }
+
+    public function test_user_can_view_product(): void
+    {
+        $product = $this->createProduct(5);
+
+        $response = $this->get(
+            route('products.show', $product)
+        );
+
+        $response->assertOk();
+
+        $response->assertSee('Test Product');
+        $response->assertSee('5');
+    }
 }
