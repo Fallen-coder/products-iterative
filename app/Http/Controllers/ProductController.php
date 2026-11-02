@@ -70,4 +70,25 @@ class ProductController extends Controller
         return redirect()->route('products.index')
             ->with('success', 'Produkts veiksmīgi dzēsts!');
     }
+
+    public function increaseQuantity(Product $product)
+{
+    $product->changeQuantity(1);
+
+    return redirect()->route('products.show', $product)
+        ->with('success', 'Produkta daudzums veiksmīgi palielināts!');
+}
+
+public function decreaseQuantity(Product $product)
+{
+    try {
+        $product->changeQuantity(-1);
+    } catch (\Exception $e) {
+        return redirect()->route('products.show', $product)
+            ->with('error', $e->getMessage());
+    }
+
+    return redirect()->route('products.show', $product)
+        ->with('success', 'Produkta daudzums veiksmīgi samazināts!');
+}
 }
