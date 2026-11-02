@@ -15,6 +15,12 @@
 
         <br><br>
 
+        <label>Cena:</label>
+        <input type="number" name="price" step="0.01" min="0"
+               value="{{ old('price', 0) }}">
+
+        <br><br>
+
         <label>Apraksts:</label>
         <textarea name="description">{{ old('description') }}</textarea>
 

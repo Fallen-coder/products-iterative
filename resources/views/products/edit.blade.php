@@ -23,7 +23,11 @@
         <textarea name="description">{{ old('description', $product->description) }}</textarea>
 
         <br><br>
+        <label>Cena:</label>
+        <input type="number" name="price" step="0.01" min="0"
+               value="{{ old('price', $product->price) }}">
 
+               <br><br>
         <label>Derīguma termiņš:</label>
         <input type="date" name="expiration_date"
                value="{{ old('expiration_date', $product->expiration_date?->format('Y-m-d')) }}">

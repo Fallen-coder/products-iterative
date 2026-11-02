@@ -25,6 +25,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'price' => 'required|decimal:2|min:0',
             'expiration_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,expired',
         ]);
@@ -51,6 +52,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'price' => 'required|decimal:2|min:0',
             'expiration_date' => 'nullable|date',
             'status' => 'required|in:active,inactive,expired',
         ]);

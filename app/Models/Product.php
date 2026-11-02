@@ -13,6 +13,7 @@ class Product extends Model
         'name',
         'quantity',
         'description',
+        'price',
         'expiration_date',
         'status',
     ];
@@ -21,6 +22,7 @@ class Product extends Model
     {
         return [
             'quantity' => 'integer',
+            'price' => 'decimal:2',
             'expiration_date' => 'date',
         ];
     }
