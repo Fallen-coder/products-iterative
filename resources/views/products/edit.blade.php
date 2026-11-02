@@ -1,61 +1,91 @@
+
 <x-layout>
-    <h1>Rediģēt produktu</h1>
+    <div class="page-container">
 
-    <form action="{{ route('products.update', $product) }}"
-          method="POST">
+        <h1 class="page-title">Rediģēt produktu</h1>
+        <p class="page-subtitle">
+            Mainiet produkta informāciju.
+        </p>
 
-        @csrf
-        @method('PUT')
+        <div class="form-card">
 
-        <label>Nosaukums:</label>
-        <input type="text" name="name"
-               value="{{ old('name', $product->name) }}">
+            <form action="{{ route('products.update', $product) }}"
+                  method="POST">
 
-        <br><br>
+                @csrf
+                @method('PUT')
 
-        <label>Daudzums:</label>
-        <input type="number" name="quantity" min="0"
-               value="{{ old('quantity', $product->quantity) }}">
+                <div class="form-grid">
 
-        <br><br>
+                    <div class="form-group">
+                        <label>Nosaukums</label>
+                        <input type="text" name="name"
+                               value="{{ old('name', $product->name) }}"
+                               required>
+                    </div>
 
-        <label>Apraksts:</label>
-        <textarea name="description">{{ old('description', $product->description) }}</textarea>
+                    <div class="form-group">
+                        <label>Daudzums</label>
+                        <input type="number" name="quantity"
+                               min="0"
+                               value="{{ old('quantity', $product->quantity) }}"
+                               required>
+                    </div>
 
-        <br><br>
-        <label>Cena:</label>
-        <input type="number" name="price" step="0.01" min="0"
-               value="{{ old('price', $product->price) }}">
+                    <div class="form-group">
+                        <label>Cena (€)</label>
+                        <input type="number" name="price"
+                               step="0.01" min="0"
+                               value="{{ old('price', $product->price) }}"
+                               required>
+                    </div>
 
-               <br><br>
-        <label>Derīguma termiņš:</label>
-        <input type="date" name="expiration_date"
-               value="{{ old('expiration_date', $product->expiration_date?->format('Y-m-d')) }}">
+                    <div class="form-group">
+                        <label>Derīguma termiņš</label>
+                        <input type="date" name="expiration_date"
+                               value="{{ old('expiration_date', $product->expiration_date?->format('Y-m-d')) }}">
+                    </div>
 
-        <br><br>
+                    <div class="form-group">
+                        <label>Statuss</label>
+                        <select name="status">
+                            <option value="active"
+                                @selected(old('status', $product->status) == 'active')>
+                                Aktīvs
+                            </option>
 
-        <label>Statuss:</label>
-        <select name="status">
-            <option value="active"
-                @selected(old('status', $product->status) == 'active')>
-                Aktīvs
-            </option>
+                            <option value="inactive"
+                                @selected(old('status', $product->status) == 'inactive')>
+                                Neaktīvs
+                            </option>
 
-            <option value="inactive"
-                @selected(old('status', $product->status) == 'inactive')>
-                Neaktīvs
-            </option>
+                            <option value="expired"
+                                @selected(old('status', $product->status) == 'expired')>
+                                Beidzies
+                            </option>
+                        </select>
+                    </div>
 
-            <option value="expired"
-                @selected(old('status', $product->status) == 'expired')>
-                Beidzies
-            </option>
-        </select>
+                    <div class="form-group full-width">
+                        <label>Apraksts</label>
+                        <textarea name="description">{{ old('description', $product->description) }}</textarea>
+                    </div>
 
-        <br><br>
+                </div>
 
-        <button type="submit">Atjaunināt</button>
+                <div class="form-actions">
+                    <a href="{{ route('products.index') }}"
+                       class="btn btn-secondary">
+                        Atpakaļ
+                    </a>
 
-        <a href="{{ route('products.index') }}">Atpakaļ</a>
-    </form>
+                    <button type="submit" class="btn btn-primary">
+                        Saglabāt izmaiņas
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 </x-layout>

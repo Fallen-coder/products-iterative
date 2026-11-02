@@ -1,57 +1,108 @@
 
 <x-layout>
-    <h1>{{ $product->name }}</h1>
+    <div class="page-container">
 
-    <p><strong>ID:</strong> {{ $product->id }}</p>
+        <h1 class="page-title">{{ $product->name }}</h1>
 
-    <p><strong>Daudzums:</strong></p>
+        <p class="page-subtitle">
+            Produkta informācija un krājumu pārvaldība.
+        </p>
 
-    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-        <form action="{{ route('products.decrease', $product) }}" method="POST">
-            @csrf
-            <button type="submit"
-                {{ $product->quantity <= 0 ? 'disabled' : '' }}>
-                - Samazināt
-            </button>
-        </form>
+        @if(session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
 
-        <strong style="font-size: 24px;">
-            {{ $product->quantity }}
-        </strong>
+        <div class="details-card">
 
-        <form action="{{ route('products.increase', $product) }}" method="POST">
-            @csrf
-            <button type="submit">
-                + Palielināt
-            </button>
-        </form>
+            <div class="details-grid">
 
+                <div class="detail-item">
+                    <span class="detail-label">Produkta ID</span>
+                    <span class="detail-value">{{ $product->id }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Nosaukums</span>
+                    <span class="detail-value">{{ $product->name }}</span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Cena</span>
+                    <span class="detail-value">
+                        {{ number_format($product->price, 2) }} €
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Derīguma termiņš</span>
+                    <span class="detail-value">
+                        {{ $product->expiration_date?->format('d.m.Y') ?? '-' }}
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Statuss</span>
+                    <span class="status-badge status-{{ $product->status }}">
+                        {{ ucfirst($product->status) }}
+                    </span>
+                </div>
+
+                <div class="detail-item">
+                    <span class="detail-label">Apraksts</span>
+                    <span class="detail-value">
+                        {{ $product->description ?? 'Nav apraksta' }}
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="detail-item" style="margin-top: 20px;">
+                <span class="detail-label">Produkta daudzums</span>
+
+                <div class="quantity-control">
+
+                    <form action="{{ route('products.decrease', $product) }}"
+                          method="POST">
+                        @csrf
+                        <button type="submit"
+                            {{ $product->quantity <= 0 ? 'disabled' : '' }}>
+                            − Samazināt
+                        </button>
+                    </form>
+
+                    <strong>{{ $product->quantity }}</strong>
+
+                    <form action="{{ route('products.increase', $product) }}"
+                          method="POST">
+                        @csrf
+                        <button type="submit">
+                            + Palielināt
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ route('products.index') }}"
+                   class="btn btn-secondary">
+                    Atpakaļ
+                </a>
+
+                <a href="{{ route('products.edit', $product) }}"
+                   class="btn btn-primary">
+                    Rediģēt produktu
+                </a>
+            </div>
+
+        </div>
     </div>
-
-    <p><strong>Apraksts:</strong> {{ $product->description ?? 'Nav apraksta' }}</p>
-
-    <p><strong>Cena:</strong> {{ $product->price }}</p>
-
-    <p>
-        <strong>Derīguma termiņš:</strong>
-        {{ $product->expiration_date?->format('d.m.Y') ?? '-' }}
-    </p>
-
-    <p><strong>Statuss:</strong> {{ $product->status }}</p>
-
-    @if(session('success'))
-        <p style="color: green;">
-            {{ session('success') }}
-        </p>
-    @endif
-
-    @if(session('error'))
-        <p style="color: red;">
-            {{ session('error') }}
-        </p>
-    @endif
-
-    <a href="{{ route('products.edit', $product) }}">Rediģēt</a>
-    <a href="{{ route('products.index') }}">Atpakaļ</a>
 </x-layout>

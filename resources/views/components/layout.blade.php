@@ -26,7 +26,7 @@
     </nav>
 
     <main class="main">
-        <x-success-message />
+        <!-- <x-success-message /> -->
         <x-validation-errors />
 
         {{ $slot }}

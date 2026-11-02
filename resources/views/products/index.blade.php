@@ -1,59 +1,110 @@
+
 <x-layout>
-    <h1>Produkti</h1>
+    <div class="products-page">
 
-    <a href="{{ route('products.create') }}">
-        Pievienot produktu
-    </a>
+        <div class="products-heading">
+            <div>
+                <h1>Produkti</h1>
+                <p>Visu pievienoto produktu saraksts</p>
+            </div>
 
-    <table border="1" cellpadding="10">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nosaukums</th>
-                <th>Daudzums</th>
-                <th>Apraksts</th>
-                <th>Price</th>
-                <th>Derīguma termiņš</th>
-                <th>Statuss</th>
-                <th>Darbības</th>
-            </tr>
-        </thead>
+            <a href="{{ route('products.create') }}" class="btn btn-primary">
+                + Pievienot produktu
+            </a>
+        </div>
 
-        <tbody>
-            @forelse ($products as $product)
-                <tr>
-                    <td>{{ $product->id }}</td>
-                    <td>{{ $product->name }}</td>
-                    <td>{{ $product->quantity }}</td>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->price }}</td>
-                    <td>{{ $product->expiration_date?->format('d.m.Y') ?? '-' }}</td>
-                    <td>{{ $product->status }}</td>
-                    <td>
-                        <a href="{{ route('products.show', $product) }}">
-                            Apskatīt
-                        </a>
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-                        <a href="{{ route('products.edit', $product) }}">
-                            Rediģēt
-                        </a>
+        <div class="table-container">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nosaukums</th>
+                        <th>Daudzums</th>
+                        <th>Apraksts</th>
+                        <th>Cena</th>
+                        <th>Derīguma termiņš</th>
+                        <th>Statuss</th>
+                        <th>Darbības</th>
+                    </tr>
+                </thead>
 
-                        <form action="{{ route('products.destroy', $product) }}"
-                              method="POST"
-                              style="display:inline">
+                <tbody>
+                    @forelse ($products as $product)
+                        <tr>
+                            <td>{{ $product->id }}</td>
 
-                            @csrf
-                            @method('DELETE')
+                            <td class="product-name">
+                                {{ $product->name }}
+                            </td>
 
-                            <button type="submit">Dzēst</button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="7">Produktu vēl nav.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
+                            <td>
+                                <span class="quantity-badge">
+                                    {{ $product->quantity }}
+                                </span>
+                            </td>
+
+                            <td class="description-cell">
+                                {{ $product->description ?? 'Nav apraksta' }}
+                            </td>
+
+                            <td class="price-cell">
+                                {{ number_format($product->price, 2) }} €
+                            </td>
+
+                            <td>
+                                {{ $product->expiration_date?->format('d.m.Y') ?? '-' }}
+                            </td>
+
+                            <td>
+                                <span class="status-badge status-{{ $product->status }}">
+                                    {{ ucfirst($product->status) }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="action-buttons">
+
+                                    <a href="{{ route('products.show', $product) }}"
+                                       class="btn btn-view">
+                                        Apskatīt
+                                    </a>
+
+                                    <a href="{{ route('products.edit', $product) }}"
+                                       class="btn btn-edit">
+                                        Rediģēt
+                                    </a>
+
+                                    <form action="{{ route('products.destroy', $product) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Vai tiešām vēlaties dzēst šo produktu?')">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" class="btn btn-delete">
+                                            Dzēst
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="8" class="empty-message">
+                                Produktu vēl nav.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </x-layout>
