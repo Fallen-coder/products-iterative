@@ -64,32 +64,36 @@
 
             </div>
 
-            <div class="detail-item" style="margin-top: 20px;">
-                <span class="detail-label">Produkta daudzums</span>
 
-                <div class="quantity-control">
+<div class="detail-item" style="margin-top: 20px;">
 
-                    <form action="{{ route('products.decrease', $product) }}"
-                          method="POST">
-                        @csrf
-                        <button type="submit"
-                            {{ $product->quantity <= 0 ? 'disabled' : '' }}>
-                            − Samazināt
-                        </button>
-                    </form>
+    <span class="detail-label">Produkta daudzums</span>
 
-                    <strong>{{ $product->quantity }}</strong>
+    <div class="quantity-control">
 
-                    <form action="{{ route('products.increase', $product) }}"
-                          method="POST">
-                        @csrf
-                        <button type="submit">
-                            + Palielināt
-                        </button>
-                    </form>
+        <button type="button"
+                id="decrease-btn"
+                onclick="changeQuantity('decrease')"
+                {{ $product->quantity <= 0 ? 'disabled' : '' }}>
+            − Samazināt
+        </button>
 
-                </div>
-            </div>
+        <strong id="product-quantity">
+            {{ $product->quantity }}
+        </strong>
+
+        <button type="button"
+                id="increase-btn"
+                onclick="changeQuantity('increase')">
+            + Palielināt
+        </button>
+
+    </div>
+
+    <p id="quantity-message"></p>
+
+</div>
+
             <div class="detail-item" style="margin-top: 25px;">
 
     <span class="detail-label">Produkta birkas</span>
@@ -176,6 +180,74 @@
     </div>
 
 <script>
+
+    function changeQuantity(action) {
+
+        const increaseBtn = document.getElementById('increase-btn');
+        const decreaseBtn = document.getElementById('decrease-btn');
+        const quantityElement = document.getElementById('product-quantity');
+        const messageElement = document.getElementById('quantity-message');
+
+        const url = action === 'increase'
+            ? "{{ route('products.increase', $product) }}"
+            : "{{ route('products.decrease', $product) }}";
+
+        // Deaktivizē pogas pieprasījuma laikā
+        increaseBtn.disabled = true;
+        decreaseBtn.disabled = true;
+
+        messageElement.textContent = '';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+
+        .then(response => response.json().then(data => ({
+            status: response.status,
+            data: data
+        })))
+
+        .then(result => {
+
+            if (!result.data.success) {
+                throw new Error(result.data.message);
+            }
+
+            // Atjaunina daudzumu bez lapas pārlādes
+            quantityElement.textContent = result.data.quantity;
+
+            // Deaktivizē samazināšanas pogu, ja daudzums ir 0
+            decreaseBtn.disabled = result.data.quantity <= 0;
+
+            messageElement.textContent = result.data.message;
+            messageElement.style.color = 'green';
+
+        })
+
+        .catch(error => {
+
+            messageElement.textContent = error.message;
+            messageElement.style.color = 'red';
+
+        })
+
+        .finally(() => {
+
+            increaseBtn.disabled = false;
+
+            decreaseBtn.disabled =
+                parseInt(quantityElement.textContent) <= 0;
+
+        });
+
+    }
+
+
 document.addEventListener('DOMContentLoaded', function () {
 
     const input = document.getElementById('tag-input');
