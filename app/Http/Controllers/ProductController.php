@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-
+use App\Models\Tag;
 class ProductController extends Controller
 {
     public function index()
@@ -38,7 +38,11 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        return view('products.show', compact('product'));
+           $product->load('tags');
+
+        $allTags = Tag::orderBy('name')->get();
+
+        return view('products.show', compact('product', 'allTags'));
     }
 
     public function edit(Product $product)
@@ -47,21 +51,43 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, Product $product)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:0',
-            'description' => 'nullable|string',
-            'price' => 'required|decimal:2|min:0',
-            'expiration_date' => 'nullable|date',
-            'status' => 'required|in:active,inactive,expired',
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'quantity' => 'required|integer|min:0',
+        'description' => 'nullable|string',
+        'price' => 'required|decimal:2|min:0',
+        'expiration_date' => 'nullable|date',
+        'status' => 'required|in:active,inactive,expired',
+
+        'tags' => 'nullable|array',
+        'tags.*' => 'required|string|max:255',
+    ]);
+
+    $product->update([
+        'name' => $validated['name'],
+        'quantity' => $validated['quantity'],
+        'description' => $validated['description'] ?? null,
+        'price' => $validated['price'],
+        'expiration_date' => $validated['expiration_date'] ?? null,
+        'status' => $validated['status'],
+    ]);
+
+    $tagIds = [];
+
+    foreach ($validated['tags'] ?? [] as $tagName) {
+        $tag = Tag::firstOrCreate([
+            'name' => trim($tagName),
         ]);
 
-        $product->update($validated);
-
-        return redirect()->route('products.index')
-            ->with('success', 'Produkts veiksmīgi atjaunināts!');
+        $tagIds[] = $tag->id;
     }
+
+    $product->tags()->sync($tagIds);
+
+    return redirect()->route('products.show', $product)
+        ->with('success', 'Produkts un tā birkas veiksmīgi atjauninātas!');
+}
 
     public function destroy(Product $product)
     {

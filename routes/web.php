@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Models\Tag;
+use Illuminate\Http\Request;
 
 Route::get('/',[ProductController::class, 'index']);
 
@@ -14,3 +16,13 @@ Route::post('/products/{product}/increase',
 Route::post('/products/{product}/decrease',
     [ProductController::class, 'decreaseQuantity'])
     ->name('products.decrease');
+
+
+Route::get('/tags/search', function (Request $request) {
+    $search = $request->get('q', '');
+
+    return Tag::where('name', 'like', '%' . $search . '%')
+        ->orderBy('name')
+        ->limit(10)
+        ->get(['id', 'name']);
+})->name('tags.search');
