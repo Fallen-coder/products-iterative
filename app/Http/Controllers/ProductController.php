@@ -72,23 +72,23 @@ class ProductController extends Controller
     }
 
     public function increaseQuantity(Product $product)
-{
-    $product->changeQuantity(1);
+    {
+        $product->changeQuantity(1);
 
-    return redirect()->route('products.show', $product)
-        ->with('success', 'Produkta daudzums veiksmīgi palielināts!');
-}
-
-public function decreaseQuantity(Product $product)
-{
-    try {
-        $product->changeQuantity(-1);
-    } catch (\Exception $e) {
         return redirect()->route('products.show', $product)
-            ->with('error', $e->getMessage());
+            ->with('success', 'Produkta daudzums veiksmīgi palielināts!');
     }
 
-    return redirect()->route('products.show', $product)
-        ->with('success', 'Produkta daudzums veiksmīgi samazināts!');
-}
+    public function decreaseQuantity(Product $product)
+    {
+        try {
+            $product->changeQuantity(-1);
+        } catch (\Exception $e) {
+            return redirect()->route('products.show', $product)
+                ->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('products.show', $product)
+            ->with('success', 'Produkta daudzums veiksmīgi samazināts!');
+    }
 }
